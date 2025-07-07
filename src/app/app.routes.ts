@@ -1,3 +1,10 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './login/login';
+// import { DashboardComponent } from './dashboard/dashboard.component'; // Décommentez quand vous aurez créé ce composant
+import { authGuard } from './core/guards/auth-guard';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  // { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] } // Décommentez plus tard
+];
