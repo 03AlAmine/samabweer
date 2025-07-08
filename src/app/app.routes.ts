@@ -4,6 +4,7 @@ import { RegisterComponent } from './register/register';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password';
 import { DashboardComponent } from './dashboard/dashboard';
 import { authGuard } from './core/guards/auth-guard';
+
 /*import { HomeComponent } from './home/home';
 import { PatientsComponent } from './patients/patients';
 import { RendezvousComponent } from './rendezvous/rendezvous';
@@ -25,5 +26,10 @@ export const routes: Routes = [
       { path: 'parametres', component: ParametresComponent },*/
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
-  }
+  },
+  /* path: 'admin',
+  {
+  loadComponent: () => import('./admin/admin').then(m => m.AdminComponent),
+}
+canActivate: [roleGuard(['admin'])]*/
 ];

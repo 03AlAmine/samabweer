@@ -5,10 +5,22 @@
     </div>
 
     <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard/home" routerLinkActive="active">Accueil</a>
-      <a mat-list-item routerLink="/dashboard/patients" routerLinkActive="active">Patients</a>
-      <a mat-list-item routerLink="/dashboard/rendezvous" routerLinkActive="active">Rendez-vous</a>
-      <a mat-list-item routerLink="/dashboard/parametres" routerLinkActive="active">Paramètres</a>
+      <a mat-list-item routerLink="/dashboard/home" routerLinkActive="active" (click)="sidenav.mode === 'over' && sidenav.close()">
+        <mat-icon>home</mat-icon>
+        <span>Accueil</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/patients" routerLinkActive="active" (click)="sidenav.mode === 'over' && sidenav.close()">
+        <mat-icon>people</mat-icon>
+        <span>Patients</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/rendezvous" routerLinkActive="active" (click)="sidenav.mode === 'over' && sidenav.close()">
+        <mat-icon>event</mat-icon>
+        <span>Rendez-vous</span>
+      </a>
+      <a mat-list-item routerLink="/dashboard/parametres" routerLinkActive="active" (click)="sidenav.mode === 'over' && sidenav.close()">
+        <mat-icon>settings</mat-icon>
+        <span>Paramètres</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -22,9 +34,17 @@
 
       <span class="spacer"></span>
 
-      <button mat-button (click)="logout()">
+      <div class="user-info" *ngIf="userProfile$ | async as user">
+        <mat-icon>account_circle</mat-icon>
+        <div class="user-details">
+          <span class="email">{{ user.email || 'Al Amine' }}</span>
+          <span class="role">{{ user.role | titlecase }}</span>
+        </div>
+      </div>
+
+      <button mat-button (click)="logout()" class="logout-button">
         <mat-icon>logout</mat-icon>
-        Déconnexion
+        <span>Déconnexion</span>
       </button>
     </mat-toolbar>
 

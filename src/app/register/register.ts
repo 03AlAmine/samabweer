@@ -7,6 +7,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +20,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSelectModule,
+    MatOptionModule // Ajout de MatOptionModule
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
@@ -29,6 +33,13 @@ export class RegisterComponent {
   confirmPassword: string = '';
   errorMessage: string | null = null;
   isLoading: boolean = false;
+  selectedRole: 'admin' | 'medecin' | 'secretaire' = 'secretaire';
+
+  roles = [
+    { value: 'admin', viewValue: 'Administrateur' },
+    { value: 'medecin', viewValue: 'Médecin' },
+    { value: 'secretaire', viewValue: 'Secrétaire' }
+  ];
 
   constructor(private auth: Auth, private router: Router) {}
 

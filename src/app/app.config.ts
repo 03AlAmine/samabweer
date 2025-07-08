@@ -5,13 +5,15 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-        provideAnimations(), // <-- Ceci est essentiel
+    provideAnimations(), // <-- Ceci est essentiel
     provideAnimations(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth())
-  ]
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+  ],
 };
