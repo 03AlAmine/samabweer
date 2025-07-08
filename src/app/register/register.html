@@ -1,11 +1,11 @@
-<div class="login-container">
+<div class="register-container">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Connexion à la clinique</mat-card-title>
+      <mat-card-title>Inscription à la clinique</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
-      <form (ngSubmit)="login()">
+      <form (ngSubmit)="register()">
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput type="email" [(ngModel)]="email" name="email" required>
@@ -16,20 +16,24 @@
           <input matInput type="password" [(ngModel)]="password" name="password" required>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Confirmer le mot de passe</mat-label>
+          <input matInput type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+        </mat-form-field>
+
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
-          <span *ngIf="!isLoading">Se connecter</span>
-          <span *ngIf="isLoading">Connexion en cours...</span>
+          <span *ngIf="!isLoading">S'inscrire</span>
+          <span *ngIf="isLoading">Inscription en cours...</span>
         </button>
       </form>
-          <div class="additional-actions">
-      <a mat-button routerLink="/forgot-password">Mot de passe oublié?</a>
-      <a mat-button routerLink="/register">Créer un compte</a>
-    </div>
-    </mat-card-content>
 
+      <div class="login-link">
+        Déjà un compte? <a mat-button routerLink="/login">Se connecter</a>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>

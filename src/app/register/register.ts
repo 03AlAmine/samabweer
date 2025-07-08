@@ -1,38 +1,45 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    MatCardModule,
     RouterLink,
+    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    MatButtonModule
   ],
-  templateUrl: './login.html',
-  styleUrls: ['./login.css'],
+  templateUrl: './register.html',
+  styleUrls: ['./register.css']
 })
-export class LoginComponent {
+export class RegisterComponent {
   email: string = '';
   password: string = '';
+  confirmPassword: string = '';
   errorMessage: string | null = null;
   isLoading: boolean = false;
 
   constructor(private auth: Auth, private router: Router) {}
 
-  async login() {
-    if (!this.email || !this.password) {
+  async register() {
+    if (!this.email || !this.password || !this.confirmPassword) {
       this.errorMessage = 'Veuillez remplir tous les champs';
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Les mots de passe ne correspondent pas';
       return;
     }
 
@@ -40,10 +47,9 @@ export class LoginComponent {
     this.errorMessage = null;
 
     try {
-      await signInWithEmailAndPassword(this.auth, this.email, this.password);
+      await createUserWithEmailAndPassword(this.auth, this.email, this.password);
       this.router.navigate(['/dashboard']);
     } catch (error: any) {
-      console.error('Erreur de connexion:', error);
       this.errorMessage = this.getErrorMessage(error.code);
     } finally {
       this.isLoading = false;
@@ -52,15 +58,14 @@ export class LoginComponent {
 
   private getErrorMessage(code: string): string {
     switch (code) {
+      case 'auth/email-already-in-use':
+        return 'Cet email est déjà utilisé';
       case 'auth/invalid-email':
         return 'Email invalide';
-      case 'auth/user-disabled':
-        return 'Compte désactivé';
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-        return 'Email ou mot de passe incorrect';
+      case 'auth/weak-password':
+        return 'Le mot de passe doit contenir au moins 6 caractères';
       default:
-        return 'Erreur de connexion';
+        return 'Erreur lors de l\'inscription';
     }
   }
 }

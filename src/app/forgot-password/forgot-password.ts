@@ -1,50 +1,54 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
-  selector: 'app-login',
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    MatCardModule,
     RouterLink,
+    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    MatButtonModule
   ],
-  templateUrl: './login.html',
-  styleUrls: ['./login.css'],
+  templateUrl: './forgot-password.html',
+  styleUrls: ['./forgot-password.css']
 })
-export class LoginComponent {
+export class ForgotPasswordComponent {
   email: string = '';
-  password: string = '';
-  errorMessage: string | null = null;
   isLoading: boolean = false;
+  emailSent: boolean = false;
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(
+    private auth: Auth,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
 
-  async login() {
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Veuillez remplir tous les champs';
+  async resetPassword() {
+    if (!this.email) {
+      this.snackBar.open('Veuillez entrer votre email', 'Fermer', { duration: 3000 });
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
 
     try {
-      await signInWithEmailAndPassword(this.auth, this.email, this.password);
-      this.router.navigate(['/dashboard']);
+      await sendPasswordResetEmail(this.auth, this.email);
+      this.emailSent = true;
+      this.snackBar.open('Email de réinitialisation envoyé', 'Fermer', { duration: 3000 });
     } catch (error: any) {
-      console.error('Erreur de connexion:', error);
-      this.errorMessage = this.getErrorMessage(error.code);
+      this.snackBar.open(this.getErrorMessage(error.code), 'Fermer', { duration: 3000 });
     } finally {
       this.isLoading = false;
     }
@@ -54,13 +58,10 @@ export class LoginComponent {
     switch (code) {
       case 'auth/invalid-email':
         return 'Email invalide';
-      case 'auth/user-disabled':
-        return 'Compte désactivé';
       case 'auth/user-not-found':
-      case 'auth/wrong-password':
-        return 'Email ou mot de passe incorrect';
+        return 'Aucun compte trouvé avec cet email';
       default:
-        return 'Erreur de connexion';
+        return 'Erreur lors de l\'envoi de l\'email';
     }
   }
 }
